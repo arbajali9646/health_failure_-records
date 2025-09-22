@@ -5,7 +5,7 @@ import numpy as np
 app = Flask(__name__)
 
 # Load your model (if you have trained one)
-# model = joblib.load('model.pkl')
+model = joblib.load('model.pkl')
 
 @app.route('/')
 def home():
