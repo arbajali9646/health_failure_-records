@@ -33,4 +33,12 @@ def predict():
 
     # Make prediction using model (dummy output here)
     # prediction = model.predict(features)[0]
-    prediction = 0  # Replace
+    prediction = 0  # Replace with model prediction
+
+    # Display result
+    result = "Patient might have high risk" if prediction == 1 else "Patient might have low risk"
+
+    return render_template('index.html', prediction_text=result)
+
+if __name__ == "__main__":
+    app.run(debug=True)
