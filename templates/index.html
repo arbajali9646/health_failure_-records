@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heart Failure Prediction</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #6dd5ed, #2193b0);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            transition: 0.3s ease-in-out;
+        }
+
+        .container:hover {
+            transform: translateY(-5px);
+        }
+
+        h2 {
+            text-align: center;
+            color: #2193b0;
+            margin-bottom: 30px;
+            font-weight: 700;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        input[type="number"] {
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        input[type="number"]:focus {
+            border-color: #2193b0;
+            box-shadow: 0 0 5px rgba(33, 147, 176, 0.5);
+        }
+
+        button {
+            padding: 15px;
+            background: #2193b0;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #6dd5ed;
+            color: #fff;
+        }
+
+        .result {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            padding: 10px;
+            border-radius: 10px;
+            background: #f0f0f0;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 30px 20px;
+            }
+
+            button {
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Heart Failure Prediction</h2>
+        <form method="POST" action="/predict">
+            <label>Age:</label>
+            <input type="number" step="any" name="age" required>
+
+            <label>Anaemia (0 = No, 1 = Yes):</label>
+            <input type="number" min="0" max="1" name="anaemia" required>
+
+            <label>Creatinine Phosphokinase:</label>
+            <input type="number" step="any" name="creatinine_phosphokinase" required>
+
+            <label>Diabetes (0 = No, 1 = Yes):</label>
+            <input type="number" min="0" max="1" name="diabetes" required>
+
+            <label>Ejection Fraction:</label>
+            <input type="number" step="any" name="ejection_fraction" required>
+
+            <label>High Blood Pressure (0 = No, 1 = Yes):</label>
+            <input type="number" min="0" max="1" name="high_blood_pressure" required>
+
+            <label>Platelets:</label>
+            <input type="number" step="any" name="platelets" required>
+
+            <label>Serum Creatinine:</label>
+            <input type="number" step="any" name="serum_creatinine" required>
+
+            <label>Serum Sodium:</label>
+            <input type="number" step="any" name="serum_sodium" required>
+
+            <label>Sex (0 = Female, 1 = Male):</label>
+            <input type="number" min="0" max="1" name="sex" required>
+
+            <label>Smoking (0 = No, 1 = Yes):</label>
+            <input type="number" min="0" max="1" name="smoking" required>
+
+            <label>Follow-up Time (days):</label>
+            <input type="number" step="any" name="time" required>
+
+            <button type="submit">Predict</button>
+        </form>
+        {% if prediction_text %}
+        <div class="result">{{ prediction_text }}</div>
+        {% endif %}
+    </div>
+</body>
+</html>
