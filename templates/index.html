@@ -12,19 +12,20 @@
   </script>
   <style>
     body {
-      background: linear-gradient(to right, #e0f7fa, #f0f4f8); /* Calm static gradient */
-    }
-
-    .dark body {
-      background: linear-gradient(to right, #1e293b, #334155); /* Dark mode gradient */
+      background-image: url('https://media.giphy.com/media/3o7TKtnuHOHHUjR38Y/giphy.gif'); /* You can replace with any medical/tech gif */
+      background-size: cover;
+      background-attachment: fixed;
+      background-repeat: no-repeat;
+      background-position: center;
     }
 
     .backdrop {
-      background-color: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(6px);
+      background-color: rgba(255, 255, 255, 0.8);
     }
 
     .dark .backdrop {
-      background-color: rgba(31, 41, 55, 0.85);
+      background-color: rgba(31, 41, 55, 0.8); /* Tailwind's gray-800 with opacity */
     }
   </style>
 </head>
@@ -46,15 +47,104 @@
       Enter the patient's clinical details below to estimate the risk of heart failure.
     </p>
 
-    <!-- Your form continues here as it is -->
-    <!-- No changes made to the form fields themselves -->
+    <form method="POST" action="/predict" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Age -->
+      <div>
+        <label class="block text-sm font-medium text-gray-800 dark:text-gray-200">Age (in years)</label>
+        <input type="number" step="any" name="age" required
+               class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-400 dark:bg-gray-700 dark:border-gray-600 dark:text-white text-base">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Patient’s age in years</p>
+      </div>
 
-    <!-- Don't forget to close your body and html tags -->
-    <script>
-      function toggleTheme() {
-        document.documentElement.classList.toggle('dark');
-      }
-    </script>
-  </div>
-</body>
-</html>
+      <!-- Anaemia -->
+      <div>
+        <label class="block text-sm font-medium text-gray-800 dark:text-gray-200">Anaemia</label>
+        <select name="anaemia" required class="mt-1 block w-full p-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+          <option value="" disabled selected>Select</option>
+          <option value="0">No</option>
+          <option value="1">Yes</option>
+        </select>
+        <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Reduced red blood cells or hemoglobin</p>
+      </div>
+
+      <!-- Creatinine Phosphokinase -->
+      <div>
+        <label class="block text-sm font-medium text-gray-800 dark:text-gray-200">Creatinine Phosphokinase (mcg/L)</label>
+        <input type="number" step="any" name="creatinine_phosphokinase" required
+               class="mt-1 block w-full p-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">CPK enzyme level in blood</p>
+      </div>
+
+      <!-- Diabetes -->
+      <div>
+        <label class="block text-sm font-medium text-gray-800 dark:text-gray-200">Diabetes</label>
+        <select name="diabetes" required class="mt-1 block w-full p-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+          <option value="" disabled selected>Select</option>
+          <option value="0">No</option>
+          <option value="1">Yes</option>
+        </select>
+        <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Whether the patient has diabetes</p>
+      </div>
+
+      <!-- Ejection Fraction -->
+      <div>
+        <label class="block text-sm font-medium text-gray-800 dark:text-gray-200">Ejection Fraction (%)</label>
+        <input type="number" step="any" name="ejection_fraction" required
+               class="mt-1 block w-full p-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Percentage of blood leaving the heart at each contraction</p>
+      </div>
+
+      <!-- High Blood Pressure -->
+      <div>
+        <label class="block text-sm font-medium text-gray-800 dark:text-gray-200">High Blood Pressure</label>
+        <select name="high_blood_pressure" required class="mt-1 block w-full p-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+          <option value="" disabled selected>Select</option>
+          <option value="0">No</option>
+          <option value="1">Yes</option>
+        </select>
+        <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">History of hypertension</p>
+      </div>
+
+      <!-- Platelets -->
+      <div>
+        <label class="block text-sm font-medium text-gray-800 dark:text-gray-200">Platelets (kiloplatelets/mL)</label>
+        <input type="number" step="any" name="platelets" required
+               class="mt-1 block w-full p-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Platelet count in blood</p>
+      </div>
+
+      <!-- Serum Creatinine -->
+      <div>
+        <label class="block text-sm font-medium text-gray-800 dark:text-gray-200">Serum Creatinine (mg/dL)</label>
+        <input type="number" step="any" name="serum_creatinine" required
+               class="mt-1 block w-full p-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Level of creatinine in the blood</p>
+      </div>
+
+      <!-- Serum Sodium -->
+      <div>
+        <label class="block text-sm font-medium text-gray-800 dark:text-gray-200">Serum Sodium (mEq/L)</label>
+        <input type="number" step="any" name="serum_sodium" required
+               class="mt-1 block w-full p-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Sodium concentration in blood</p>
+      </div>
+
+      <!-- Sex -->
+      <div>
+        <label class="block text-sm font-medium text-gray-800 dark:text-gray-200">Sex</label>
+        <select name="sex" required class="mt-1 block w-full p-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+          <option value="" disabled selected>Select</option>
+          <option value="0">Female</option>
+          <option value="1">Male</option>
+        </select>
+        <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Biological sex of the patient</p>
+      </div>
+
+      <!-- Smoking -->
+      <div>
+        <label class="block text-sm font-medium text-gray-800 dark:text-gray-200">Smoking</label>
+        <select name="smoking" required class="mt-1 block w-full p-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+          <option value="" disabled selected>Select</option>
+          <option value="0">No</option>
+          <option value="1">Yes</option>
+       
