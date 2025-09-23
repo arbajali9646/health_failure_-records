@@ -1,35 +1,64 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Heart Failure Risk Predictor</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              light: '#6366f1', // indigo-500
+              DEFAULT: '#4f46e5', // indigo-600
+              dark: '#4338ca' // indigo-700
+            },
+            dangerLight: '#fee2e2', // red-200
+            dangerDark: '#fca5a5', // red-300
+            warningLight: '#fef3c7', // yellow-200
+            warningDark: '#fde68a' // yellow-300
+          },
+          fontFamily: {
+            sans: ['"Inter"', 'ui-sans-serif', 'system-ui']
+          }
+        }
+      }
     };
   </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
 </head>
-<body class="transition-all duration-300 bg-blue-100 dark:bg-gray-900 dark:text-white">
+<body class="bg-gradient-to-tr from-blue-100 to-indigo-100 dark:from-gray-900 dark:to-gray-800 text-gray-800 dark:text-gray-200 font-sans transition-colors duration-500">
 
-  <!-- Theme Toggle -->
-  <div class="fixed top-4 right-4">
-    <button onclick="toggleTheme()" class="bg-indigo-600 text-white px-4 py-2 rounded shadow hover:bg-indigo-700">
+  <!-- Theme Toggle Button -->
+  <div class="fixed top-6 right-6 z-50">
+    <button
+      aria-label="Toggle Dark Mode"
+      onclick="toggleTheme()"
+      class="flex items-center gap-2 bg-primary DEFAULT hover:bg-primary dark:hover:bg-primary-dark transition-colors duration-300 text-white px-5 py-3 rounded-xl shadow-lg focus:outline-none focus:ring-4 focus:ring-primary-light"
+      type="button"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m8.66-11H21m-18 0h1.34m12.02 6.78l.95.95m-14.6 0l.95-.95M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+      </svg>
       Toggle Theme
     </button>
   </div>
 
-  <!-- Main Container -->
-  <div class="max-w-4xl mx-auto my-16 px-6 py-10 bg-white dark:bg-gray-800 rounded-lg shadow-xl">
-    <h1 class="text-4xl font-bold text-center text-indigo-700 dark:text-indigo-300 mb-4">
-      Heart Failure Risk Predictor
-    </h1>
-    <p class="text-center text-lg text-gray-700 dark:text-gray-300 mb-8">
-      Enter the patient's clinical details below to estimate the risk of heart failure.
-    </p>
+  <!-- Main container -->
+  <main class="max-w-4xl mx-auto p-8 sm:p-12 bg-white dark:bg-gray-800 rounded-3xl shadow-2xl ring-1 ring-indigo-200 dark:ring-indigo-700">
+    <header class="mb-10 text-center">
+      <h1 class="text-5xl font-extrabold text-primary DEFAULT dark:text-primary-light mb-2 select-none tracking-tight">
+        Heart Failure Risk Predictor
+      </h1>
+      <p class="text-lg text-gray-600 dark:text-gray-400 max-w-xl mx-auto">
+        Enter the patient’s clinical details below to estimate the risk of heart failure accurately.
+      </p>
+    </header>
 
-    <form method="POST" action="/predict" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <form method="POST" action="/predict" class="grid grid-cols-1 md:grid-cols-2 gap-8">
 
       {% set bool_fields = ['anaemia', 'diabetes', 'high_blood_pressure', 'smoking'] %}
       {% set fields = [
@@ -46,69 +75,42 @@
       ] %}
 
       {% for field, label, help in fields %}
-        <div>
-          <label class="block text-sm font-medium text-gray-800 dark:text-gray-200">{{ label }}</label>
+      <div class="flex flex-col">
+        <label for="{{ field }}" class="mb-2 font-semibold text-gray-900 dark:text-gray-100 cursor-pointer select-none">{{ label }}</label>
 
-          {% if field in bool_fields %}
-            <select name="{{ field }}" required
-                    class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-400 dark:bg-gray-700 dark:border-gray-600 dark:text-white text-base">
-              <option value="" disabled selected>Select</option>
-              <option value="No">No</option>
-              <option value="Yes">Yes</option>
-            </select>
-          {% else %}
-            <input type="number" step="any" name="{{ field }}" required
-                   class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-400 dark:bg-gray-700 dark:border-gray-600 dark:text-white text-base">
-          {% endif %}
+        {% if field in bool_fields %}
+          <select id="{{ field }}" name="{{ field }}" required
+            class="appearance-none bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary DEFAULT text-gray-900 dark:text-gray-100 transition duration-300">
+            <option value="" disabled selected>Select</option>
+            <option value="No">No</option>
+            <option value="Yes">Yes</option>
+          </select>
+        {% else %}
+          <input
+            type="number" step="any" id="{{ field }}" name="{{ field }}" required
+            placeholder="{{ help }}"
+            class="bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-3 text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary DEFAULT transition duration-300"
+          />
+        {% endif %}
 
-          <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">{{ help }}</p>
-        </div>
+        <small class="mt-1 text-gray-500 dark:text-gray-400 italic">{{ help }}</small>
+      </div>
       {% endfor %}
 
       <!-- Sex Dropdown -->
-      <div>
-        <label class="block text-sm font-medium text-gray-800 dark:text-gray-200">Sex</label>
-        <select name="sex" required
-                class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-400 dark:bg-gray-700 dark:border-gray-600 dark:text-white text-base">
+      <div class="flex flex-col">
+        <label for="sex" class="mb-2 font-semibold text-gray-900 dark:text-gray-100 cursor-pointer select-none">Sex</label>
+        <select id="sex" name="sex" required
+          class="appearance-none bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary DEFAULT text-gray-900 dark:text-gray-100 transition duration-300">
           <option value="" disabled selected>Select sex</option>
           <option value="Female">Female</option>
           <option value="Male">Male</option>
         </select>
-        <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Biological sex of the patient</p>
+        <small class="mt-1 text-gray-500 dark:text-gray-400 italic">Biological sex of the patient</small>
       </div>
 
+      <!-- Submit Button -->
       <div class="md:col-span-2">
-        <button type="submit"
-                class="w-full py-3 mt-4 bg-indigo-600 text-white font-semibold rounded-lg text-lg hover:bg-indigo-700 transition-colors">
-          🔍 Predict Risk
-        </button>
-      </div>
-    </form>
-
-    {% if result %}
-      <div class="mt-8 p-4 text-center text-xl rounded-lg font-semibold
-           {{ 'bg-yellow-200 text-yellow-900 dark:bg-yellow-300' if 'SURVIVE' in result else 'bg-red-200 text-red-800 dark:bg-red-300' }}">
-        {{ result }}
-      </div>
-    {% endif %}
-
-    <div class="mt-8 text-center">
-      <a href="https://colab.research.google.com/drive/1wLCL-qDtqmjkQjlKZadDQDPvGf7XbfRf?usp=sharing"
-         target="_blank" rel="noopener noreferrer"
-         class="text-indigo-700 hover:underline dark:text-indigo-300">
-        🔗 View Full Code on Google Colab
-      </a>
-    </div>
-  </div>
-
-  <footer class="text-center text-gray-600 dark:text-gray-400 text-sm py-6">
-    &copy; 2025 Arbaj Ali. All rights reserved.
-  </footer>
-
-  <script>
-    function toggleTheme() {
-      document.documentElement.classList.toggle('dark');
-    }
-  </script>
-</body>
-</html>
+        <button
+          type="submit"
+          class="w-full py-4 mt-6 bg-primary DEFAULT hover:bg-primary-dark text-white font-extrabold text-xl rounded-2xl shadow-lg transition-all duration-300 focus:outline-none focus
