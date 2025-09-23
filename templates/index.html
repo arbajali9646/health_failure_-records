@@ -1,229 +1,107 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Heart Failure Risk Predictor - AI Medical Analytics</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/1682/1682636.png">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Inter', sans-serif; }
-        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-        .card-shadow { box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); }
-        .glass-effect { 
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        .input-focus:focus { 
-            transform: translateY(-1px);
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.15);
-        }
-        .btn-glow:hover {
-            box-shadow: 0 0 30px rgba(102, 126, 234, 0.4);
-            transform: translateY(-2px);
-        }
-        .floating-animation {
-            animation: float 3s ease-in-out infinite;
-        }
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-        }
-        .section-divider {
-            background: linear-gradient(90deg, transparent, #667eea, transparent);
-            height: 1px;
-        }
-        .medical-icon {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Heart Failure Risk Predictor</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+    };
+  </script>
+  <style>
+    /* Background video styling */
+    #bg-video {
+      position: fixed;
+      right: 0;
+      bottom: 0;
+      min-width: 100%;
+      min-height: 100%;
+      z-index: -1;
+      object-fit: cover;
+      opacity: 0.2;
+    }
+  </style>
 </head>
-<body class="gradient-bg min-h-screen">
-    <!-- Header Section -->
-    <div class="text-center py-12">
-        <div class="floating-animation inline-block mb-6">
-            <div class="w-20 h-20 mx-auto bg-white rounded-full flex items-center justify-center card-shadow">
-                <span class="text-4xl">🫀</span>
-            </div>
-        </div>
-        <h1 class="text-5xl font-bold text-white mb-4 tracking-tight">
-            AI Heart Failure Risk Predictor
-        </h1>
-        <p class="text-xl text-white/80 max-w-2xl mx-auto leading-relaxed">
-            Advanced machine learning model for cardiovascular risk assessment
-        </p>
-        <div class="section-divider max-w-xs mx-auto mt-8"></div>
+<body class="transition-all duration-300 bg-white dark:bg-gray-900 dark:text-white">
+
+  <!-- Background Video -->
+  <video autoplay muted loop id="bg-video">
+    <source src="https://cdn.coverr.co/videos/coverr-doctor-writing-notes-7763/1080p.mp4" type="video/mp4">
+    Your browser does not support HTML5 video.
+  </video>
+
+  <!-- Theme Toggle -->
+  <div class="fixed top-4 right-4">
+    <button onclick="toggleTheme()" class="bg-indigo-600 text-white px-4 py-2 rounded shadow hover:bg-indigo-700">
+      Toggle Theme
+    </button>
+  </div>
+
+  <!-- Main Container -->
+  <div class="max-w-4xl mx-auto my-16 px-6 py-10 bg-white bg-opacity-80 dark:bg-gray-800 dark:bg-opacity-80 rounded-lg shadow-xl">
+    <h1 class="text-4xl font-bold text-center text-indigo-700 dark:text-indigo-300 mb-4">
+      Heart Failure Risk Predictor
+    </h1>
+    <p class="text-center text-lg text-gray-700 dark:text-gray-300 mb-8">
+      Enter the patient's clinical details below to estimate the risk of heart failure.
+    </p>
+
+    <form method="POST" action="/predict" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {% for field, label, help in [
+        ('age', 'Age (in years)', 'Patient’s age in years'),
+        ('anaemia', 'Anaemia (0 = No, 1 = Yes)', 'Reduced red blood cells or hemoglobin'),
+        ('creatinine_phosphokinase', 'Creatinine Phosphokinase (mcg/L)', 'CPK enzyme level in blood'),
+        ('diabetes', 'Diabetes (0 = No, 1 = Yes)', 'Whether the patient has diabetes'),
+        ('ejection_fraction', 'Ejection Fraction (%)', 'Percentage of blood leaving the heart at each contraction'),
+        ('high_blood_pressure', 'High Blood Pressure (0 = No, 1 = Yes)', 'History of hypertension'),
+        ('platelets', 'Platelets (kiloplatelets/mL)', 'Platelet count in blood'),
+        ('serum_creatinine', 'Serum Creatinine (mg/dL)', 'Level of creatinine in the blood'),
+        ('serum_sodium', 'Serum Sodium (mEq/L)', 'Sodium concentration in blood'),
+        ('sex', 'Sex (0 = Female, 1 = Male)', 'Biological sex of the patient'),
+        ('smoking', 'Smoking (0 = No, 1 = Yes)', 'Whether the patient smokes')
+      ] %}
+      <div>
+        <label class="block text-sm font-medium text-gray-800 dark:text-gray-200">{{ label }}</label>
+        <input type="number" step="any" name="{{ field }}" required
+               class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-400 dark:bg-gray-700 dark:border-gray-600 dark:text-white text-base">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">{{ help }}</p>
+      </div>
+      {% endfor %}
+
+      <div class="md:col-span-2">
+        <button type="submit"
+                class="w-full py-3 mt-4 bg-indigo-600 text-white font-semibold rounded-lg text-lg hover:bg-indigo-700 transition-colors">
+          🔍 Predict Risk
+        </button>
+      </div>
+    </form>
+
+    {% if result %}
+    <div class="mt-8 p-4 text-center text-xl rounded-lg font-semibold
+         {{ 'bg-yellow-200 text-yellow-900 dark:bg-yellow-300' if 'SURVIVE' in result else 'bg-red-200 text-red-800 dark:bg-red-300' }}">
+      {{ result }}
     </div>
+    {% endif %}
 
-    <!-- Main Form Container -->
-    <div class="max-w-6xl mx-auto px-6 pb-12">
-        <div class="glass-effect rounded-3xl card-shadow p-8 md:p-12">
-            <!-- Form Header -->
-            <div class="text-center mb-12">
-                <h2 class="text-3xl font-semibold text-gray-800 mb-4">Patient Clinical Assessment</h2>
-                <p class="text-gray-600 text-lg">Complete all fields for accurate risk prediction</p>
-            </div>
-
-            <form method="POST" action="/predict" class="space-y-8">
-                <!-- Patient Demographics -->
-                <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-6">
-                    <h3 class="text-xl font-semibold text-gray-800 mb-6 flex items-center">
-                        <span class="medical-icon text-2xl mr-3">👤</span>
-                        Patient Demographics
-                    </h3>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div class="space-y-2">
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">Age</label>
-                            <input type="number" name="age" required placeholder="Years"
-                                class="w-full p-4 border-0 rounded-xl bg-white/80 focus:bg-white input-focus transition-all duration-300 text-lg font-medium">
-                            <p class="text-xs text-gray-500 mt-1">Patient's age in years</p>
-                        </div>
-                        <div class="space-y-2">
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">Biological Sex</label>
-                            <select name="sex" required
-                                class="w-full p-4 border-0 rounded-xl bg-white/80 focus:bg-white input-focus transition-all duration-300 text-lg font-medium">
-                                <option value="">Select sex...</option>
-                                <option value="0">Female</option>
-                                <option value="1">Male</option>
-                            </select>
-                            <p class="text-xs text-gray-500 mt-1">Biological sex of the patient</p>
-                        </div>
-                        <div class="space-y-2">
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">Smoking Status</label>
-                            <select name="smoking" required
-                                class="w-full p-4 border-0 rounded-xl bg-white/80 focus:bg-white input-focus transition-all duration-300 text-lg font-medium">
-                                <option value="">Select status...</option>
-                                <option value="0">Non-Smoker</option>
-                                <option value="1">Smoker</option>
-                            </select>
-                            <p class="text-xs text-gray-500 mt-1">Current smoking habits</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Medical Conditions -->
-                <div class="bg-gradient-to-r from-emerald-50 to-teal-50 rounded-2xl p-6">
-                    <h3 class="text-xl font-semibold text-gray-800 mb-6 flex items-center">
-                        <span class="medical-icon text-2xl mr-3">🏥</span>
-                        Medical History
-                    </h3>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div class="space-y-2">
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">Anaemia</label>
-                            <select name="anaemia" required
-                                class="w-full p-4 border-0 rounded-xl bg-white/80 focus:bg-white input-focus transition-all duration-300 text-lg font-medium">
-                                <option value="">Select condition...</option>
-                                <option value="0">No</option>
-                                <option value="1">Yes</option>
-                            </select>
-                            <p class="text-xs text-gray-500 mt-1">Reduced red blood cells</p>
-                        </div>
-                        <div class="space-y-2">
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">Diabetes</label>
-                            <select name="diabetes" required
-                                class="w-full p-4 border-0 rounded-xl bg-white/80 focus:bg-white input-focus transition-all duration-300 text-lg font-medium">
-                                <option value="">Select condition...</option>
-                                <option value="0">No</option>
-                                <option value="1">Yes</option>
-                            </select>
-                            <p class="text-xs text-gray-500 mt-1">Type 1 or Type 2 diabetes</p>
-                        </div>
-                        <div class="space-y-2">
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">Hypertension</label>
-                            <select name="high_blood_pressure" required
-                                class="w-full p-4 border-0 rounded-xl bg-white/80 focus:bg-white input-focus transition-all duration-300 text-lg font-medium">
-                                <option value="">Select condition...</option>
-                                <option value="0">No</option>
-                                <option value="1">Yes</option>
-                            </select>
-                            <p class="text-xs text-gray-500 mt-1">High blood pressure history</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Cardiac Function -->
-                <div class="bg-gradient-to-r from-rose-50 to-pink-50 rounded-2xl p-6">
-                    <h3 class="text-xl font-semibold text-gray-800 mb-6 flex items-center">
-                        <span class="medical-icon text-2xl mr-3">❤️</span>
-                        Cardiac Function
-                    </h3>
-                    <div class="grid grid-cols-1 md:grid-cols-1 gap-6">
-                        <div class="space-y-2">
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">Ejection Fraction (%)</label>
-                            <input type="number" step="0.1" name="ejection_fraction" required placeholder="Percentage (0-100)"
-                                class="w-full p-4 border-0 rounded-xl bg-white/80 focus:bg-white input-focus transition-all duration-300 text-lg font-medium">
-                            <p class="text-xs text-gray-500 mt-1">Percentage of blood pumped from left ventricle with each heartbeat</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Laboratory Values -->
-                <div class="bg-gradient-to-r from-amber-50 to-orange-50 rounded-2xl p-6">
-                    <h3 class="text-xl font-semibold text-gray-800 mb-6 flex items-center">
-                        <span class="medical-icon text-2xl mr-3">🧪</span>
-                        Laboratory Results
-                    </h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        <div class="space-y-2">
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">CPK Level</label>
-                            <input type="number" step="0.1" name="creatinine_phosphokinase" required placeholder="mcg/L"
-                                class="w-full p-4 border-0 rounded-xl bg-white/80 focus:bg-white input-focus transition-all duration-300 text-lg font-medium">
-                            <p class="text-xs text-gray-500 mt-1">Creatinine phosphokinase</p>
-                        </div>
-                        <div class="space-y-2">
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">Platelets</label>
-                            <input type="number" step="0.1" name="platelets" required placeholder="kiloplatelets/mL"
-                                class="w-full p-4 border-0 rounded-xl bg-white/80 focus:bg-white input-focus transition-all duration-300 text-lg font-medium">
-                            <p class="text-xs text-gray-500 mt-1">Platelet count</p>
-                        </div>
-                        <div class="space-y-2">
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">Serum Creatinine</label>
-                            <input type="number" step="0.01" name="serum_creatinine" required placeholder="mg/dL"
-                                class="w-full p-4 border-0 rounded-xl bg-white/80 focus:bg-white input-focus transition-all duration-300 text-lg font-medium">
-                            <p class="text-xs text-gray-500 mt-1">Kidney function marker</p>
-                        </div>
-                        <div class="space-y-2">
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">Serum Sodium</label>
-                            <input type="number" step="0.1" name="serum_sodium" required placeholder="mEq/L"
-                                class="w-full p-4 border-0 rounded-xl bg-white/80 focus:bg-white input-focus transition-all duration-300 text-lg font-medium">
-                            <p class="text-xs text-gray-500 mt-1">Blood sodium level</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Submit Button -->
-                <div class="text-center pt-8">
-                    <button type="submit"
-                        class="px-12 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold rounded-2xl text-xl btn-glow transition-all duration-300 shadow-lg">
-                        <span class="mr-3">🔬</span>
-                        Analyze Risk Profile
-                    </button>
-                </div>
-            </form>
-
-            <!-- Footer Links -->
-            <div class="mt-12 pt-8 border-t border-gray-200 text-center">
-                <a href="https://colab.research.google.com/drive/1wLCL-qDtqmjkQjlKZadDQDPvGf7XbfRf?usp=sharing"
-                    target="_blank" rel="noopener noreferrer"
-                    class="inline-flex items-center px-6 py-3 bg-gray-800 text-white rounded-xl hover:bg-gray-700 transition-all duration-300 font-medium">
-                    <span class="mr-2">💻</span>
-                    View Implementation Code
-                </a>
-            </div>
-        </div>
+    <div class="mt-8 text-center">
+      <a href="https://colab.research.google.com/drive/1wLCL-qDtqmjkQjlKZadDQDPvGf7XbfRf?usp=sharing"
+         target="_blank" rel="noopener noreferrer"
+         class="text-indigo-700 hover:underline dark:text-indigo-300">
+        🔗 View Full Code on Google Colab
+      </a>
     </div>
+  </div>
 
-    <!-- Developer Credit -->
-    <footer class="text-center text-white/70 py-8">
-        <div class="flex items-center justify-center space-x-2">
-            <span>Developed with</span>
-            <span class="text-red-400">❤️</span>
-            <span>by <strong>Arbaj Ali</strong> • © 2025</span>
-        </div>
-    </footer>
+  <footer class="text-center text-gray-600 dark:text-gray-400 text-sm py-6">
+    &copy; 2025 Arbaj Ali. All rights reserved.
+  </footer>
+
+  <script>
+    function toggleTheme() {
+      document.documentElement.classList.toggle('dark');
+    }
+  </script>
 </body>
 </html>
