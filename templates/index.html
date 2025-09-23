@@ -12,20 +12,11 @@
   </script>
   <style>
     body {
-      background-image: url('https://media.giphy.com/media/3o7TKtnuHOHHUjR38Y/giphy.gif'); /* You can replace with any medical/tech gif */
-      background-size: cover;
-      background-attachment: fixed;
-      background-repeat: no-repeat;
-      background-position: center;
+      background: linear-gradient(to right, #cfe9f5, #e0f7fa);
     }
 
-    .backdrop {
-      backdrop-filter: blur(6px);
-      background-color: rgba(255, 255, 255, 0.8);
-    }
-
-    .dark .backdrop {
-      background-color: rgba(31, 41, 55, 0.8); /* Tailwind's gray-800 with opacity */
+    .dark body {
+      background: linear-gradient(to right, #1f2937, #374151);
     }
   </style>
 </head>
@@ -39,7 +30,7 @@
   </div>
 
   <!-- Main Container -->
-  <div class="backdrop max-w-4xl mx-auto my-16 px-6 py-10 rounded-lg shadow-xl">
+  <div class="max-w-5xl mx-auto my-16 px-6 py-10 bg-white dark:bg-gray-800 rounded-lg shadow-xl">
     <h1 class="text-4xl font-bold text-center text-indigo-700 dark:text-indigo-300 mb-4">
       Heart Failure Risk Predictor
     </h1>
@@ -52,15 +43,15 @@
       <div>
         <label class="block text-sm font-medium text-gray-800 dark:text-gray-200">Age (in years)</label>
         <input type="number" step="any" name="age" required
-               class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-400 dark:bg-gray-700 dark:border-gray-600 dark:text-white text-base">
+               class="mt-1 block w-full p-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white">
         <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Patient’s age in years</p>
       </div>
 
       <!-- Anaemia -->
       <div>
         <label class="block text-sm font-medium text-gray-800 dark:text-gray-200">Anaemia</label>
-        <select name="anaemia" required class="mt-1 block w-full p-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-          <option value="" disabled selected>Select</option>
+        <select name="anaemia" required
+                class="mt-1 block w-full p-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white">
           <option value="0">No</option>
           <option value="1">Yes</option>
         </select>
@@ -78,23 +69,5 @@
       <!-- Diabetes -->
       <div>
         <label class="block text-sm font-medium text-gray-800 dark:text-gray-200">Diabetes</label>
-        <select name="diabetes" required class="mt-1 block w-full p-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-          <option value="" disabled selected>Select</option>
-          <option value="0">No</option>
-          <option value="1">Yes</option>
-        </select>
-        <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Whether the patient has diabetes</p>
-      </div>
-
-      <!-- Ejection Fraction -->
-      <div>
-        <label class="block text-sm font-medium text-gray-800 dark:text-gray-200">Ejection Fraction (%)</label>
-        <input type="number" step="any" name="ejection_fraction" required
-               class="mt-1 block w-full p-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-        <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Percentage of blood leaving the heart at each contraction</p>
-      </div>
-
-      <!-- High Blood Pressure -->
-      <div>
-        <label class="block text-sm font-medium text-gray-800 dark:text-gray-200">High Blood Pressure</label>
-        <select name="hi
+        <select name="diabetes" required
+                class="mt-1 block w-full p-2 border rounded-md dar
