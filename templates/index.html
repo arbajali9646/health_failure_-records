@@ -12,11 +12,20 @@
   </script>
   <style>
     body {
-      background: linear-gradient(to right, #cfe9f5, #e0f7fa);
+      background-image: url('https://media.giphy.com/media/xT9IgzoKnwFNmISR8I/giphy.gif'); /* Replace with a relevant GIF */
+      background-size: cover;
+      background-attachment: fixed;
+      background-repeat: no-repeat;
+      background-position: center;
     }
 
-    .dark body {
-      background: linear-gradient(to right, #1f2937, #374151);
+    .backdrop {
+      backdrop-filter: blur(8px);
+      background-color: rgba(255, 255, 255, 0.85);
+    }
+
+    .dark .backdrop {
+      background-color: rgba(31, 41, 55, 0.85);
     }
   </style>
 </head>
@@ -30,7 +39,7 @@
   </div>
 
   <!-- Main Container -->
-  <div class="max-w-5xl mx-auto my-16 px-6 py-10 bg-white dark:bg-gray-800 rounded-lg shadow-xl">
+  <div class="backdrop max-w-4xl mx-auto my-16 px-6 py-10 rounded-lg shadow-xl">
     <h1 class="text-4xl font-bold text-center text-indigo-700 dark:text-indigo-300 mb-4">
       Heart Failure Risk Predictor
     </h1>
@@ -39,19 +48,20 @@
     </p>
 
     <form method="POST" action="/predict" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
       <!-- Age -->
       <div>
         <label class="block text-sm font-medium text-gray-800 dark:text-gray-200">Age (in years)</label>
         <input type="number" step="any" name="age" required
-               class="mt-1 block w-full p-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+               class="mt-1 block w-full p-2 border rounded-md focus:ring-2 focus:ring-indigo-400 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
         <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Patient’s age in years</p>
       </div>
 
       <!-- Anaemia -->
       <div>
         <label class="block text-sm font-medium text-gray-800 dark:text-gray-200">Anaemia</label>
-        <select name="anaemia" required
-                class="mt-1 block w-full p-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+        <select name="anaemia" required class="mt-1 block w-full p-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+          <option value="" disabled selected>Select</option>
           <option value="0">No</option>
           <option value="1">Yes</option>
         </select>
@@ -69,5 +79,81 @@
       <!-- Diabetes -->
       <div>
         <label class="block text-sm font-medium text-gray-800 dark:text-gray-200">Diabetes</label>
-        <select name="diabetes" required
-                class="mt-1 block w-full p-2 border rounded-md dar
+        <select name="diabetes" required class="mt-1 block w-full p-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+          <option value="" disabled selected>Select</option>
+          <option value="0">No</option>
+          <option value="1">Yes</option>
+        </select>
+        <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Whether the patient has diabetes</p>
+      </div>
+
+      <!-- Ejection Fraction -->
+      <div>
+        <label class="block text-sm font-medium text-gray-800 dark:text-gray-200">Ejection Fraction (%)</label>
+        <input type="number" step="any" name="ejection_fraction" required
+               class="mt-1 block w-full p-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Percentage of blood leaving the heart at each contraction</p>
+      </div>
+
+      <!-- High Blood Pressure -->
+      <div>
+        <label class="block text-sm font-medium text-gray-800 dark:text-gray-200">High Blood Pressure</label>
+        <select name="high_blood_pressure" required class="mt-1 block w-full p-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+          <option value="" disabled selected>Select</option>
+          <option value="0">No</option>
+          <option value="1">Yes</option>
+        </select>
+        <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">History of hypertension</p>
+      </div>
+
+      <!-- Platelets -->
+      <div>
+        <label class="block text-sm font-medium text-gray-800 dark:text-gray-200">Platelets (kiloplatelets/mL)</label>
+        <input type="number" step="any" name="platelets" required
+               class="mt-1 block w-full p-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Platelet count in blood</p>
+      </div>
+
+      <!-- Serum Creatinine -->
+      <div>
+        <label class="block text-sm font-medium text-gray-800 dark:text-gray-200">Serum Creatinine (mg/dL)</label>
+        <input type="number" step="any" name="serum_creatinine" required
+               class="mt-1 block w-full p-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Level of creatinine in the blood</p>
+      </div>
+
+      <!-- Serum Sodium -->
+      <div>
+        <label class="block text-sm font-medium text-gray-800 dark:text-gray-200">Serum Sodium (mEq/L)</label>
+        <input type="number" step="any" name="serum_sodium" required
+               class="mt-1 block w-full p-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Sodium concentration in blood</p>
+      </div>
+
+      <!-- Smoking -->
+      <div>
+        <label class="block text-sm font-medium text-gray-800 dark:text-gray-200">Smoking</label>
+        <select name="smoking" required class="mt-1 block w-full p-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+          <option value="" disabled selected>Select</option>
+          <option value="0">No</option>
+          <option value="1">Yes</option>
+        </select>
+        <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Whether the patient smokes</p>
+      </div>
+
+      <!-- Sex -->
+      <div>
+        <label class="block text-sm font-medium text-gray-800 dark:text-gray-200">Sex</label>
+        <select name="sex" required
+                class="mt-1 block w-full p-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+          <option value="" disabled selected>Select sex</option>
+          <option value="0">Female</option>
+          <option value="1">Male</option>
+        </select>
+        <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Biological sex of the patient</p>
+      </div>
+
+      <!-- Submit -->
+      <div class="md:col-span-2">
+        <button type="submit"
+                class="w-full py-3 mt-
