@@ -3,32 +3,25 @@ import joblib
 import numpy as np
 
 app = Flask(__name__)
-
-# Load the trained model
 model = joblib.load('model.pkl')
 
 @app.route('/')
-def home():
+def index():
     return render_template('index.html')
 
 @app.route('/predict', methods=['POST'])
 def predict():
     try:
-        # Get data from form
-        data = [float(x) for x in request.form.values()]
-        final_input = np.array(data).reshape(1, -1)
-        
-        # Make prediction
-        prediction = model.predict(final_input)[0]
-        
-        if prediction == 1:
-            result = "The patient is likely to have DEATH_EVENT."
-        else:
-            result = "The patient is unlikely to have DEATH_EVENT."
-        
-        return render_template('index.html', prediction_text=result)
+        data = [float(request.form.get(f)) for f in [
+            'age', 'anaemia', 'creatinine_phosphokinase', 'diabetes', 'ejection_fraction',
+            'high_blood_pressure', 'platelets', 'serum_creatinine', 'serum_sodium',
+            'sex', 'smoking'
+        ]]
+        prediction = model.predict([np.array(data)])
+        result = "Patient is likely to DIE 😢" if prediction[0] == 1 else "Patient is likely to SURVIVE 😊"
+        return render_template('index.html', result=result)
     except Exception as e:
-        return render_template('index.html', prediction_text=f"Error: {e}")
+        return render_template('index.html', result=f"Error: {str(e)}")
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     app.run(debug=True)
