@@ -5,55 +5,64 @@
     <title>Heart Failure Prediction</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/1682/1682636.png">
 </head>
-<body class="bg-gray-100 min-h-screen flex flex-col justify-between">
+<body class="bg-white text-gray-900 min-h-screen flex flex-col justify-between font-sans">
 
-    <div class="max-w-3xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
-        <h1 class="text-3xl font-bold mb-6 text-center text-red-600">Heart Failure Prediction</h1>
-        
-        <form method="POST" action="/predict" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {% for field in [
-                ('age', 'Age'),
-                ('anaemia', 'Anaemia (0/1)'),
-                ('creatinine_phosphokinase', 'Creatinine Phosphokinase'),
-                ('diabetes', 'Diabetes (0/1)'),
-                ('ejection_fraction', 'Ejection Fraction'),
-                ('high_blood_pressure', 'High Blood Pressure (0/1)'),
-                ('platelets', 'Platelets'),
-                ('serum_creatinine', 'Serum Creatinine'),
-                ('serum_sodium', 'Serum Sodium'),
-                ('sex', 'Sex (0=F, 1=M)'),
-                ('smoking', 'Smoking (0/1)')
+    <div class="max-w-4xl mx-auto mt-10 px-4 py-6 bg-gray-100 rounded-lg shadow-lg">
+        <h1 class="text-4xl font-bold mb-6 text-center text-indigo-700">Heart Failure Risk Predictor</h1>
+        <p class="text-center text-md mb-8 text-gray-700">Enter the patient's clinical details below to estimate the risk of heart failure.</p>
+
+        <form method="POST" action="/predict" class="grid grid-cols-1 md:grid-cols-2 gap-6 text-lg">
+            {% for field, label, help in [
+                ('age', 'Age (in years)', 'Patient’s age in years'),
+                ('anaemia', 'Anaemia (0 = No, 1 = Yes)', 'Reduced red blood cells or hemoglobin'),
+                ('creatinine_phosphokinase', 'Creatinine Phosphokinase (mcg/L)', 'CPK enzyme level in blood'),
+                ('diabetes', 'Diabetes (0 = No, 1 = Yes)', 'Whether the patient has diabetes'),
+                ('ejection_fraction', 'Ejection Fraction (%)', 'Percentage of blood leaving the heart at each contraction'),
+                ('high_blood_pressure', 'High Blood Pressure (0 = No, 1 = Yes)', 'History of hypertension'),
+                ('platelets', 'Platelets (kiloplatelets/mL)', 'Platelet count in blood'),
+                ('serum_creatinine', 'Serum Creatinine (mg/dL)', 'Level of creatinine in the blood'),
+                ('serum_sodium', 'Serum Sodium (mEq/L)', 'Sodium concentration in blood'),
+                ('sex', 'Sex (0 = Female, 1 = Male)', 'Biological sex of the patient'),
+                ('smoking', 'Smoking (0 = No, 1 = Yes)', 'Whether the patient smokes')
             ] %}
             <div>
-                <label class="block text-sm font-medium text-gray-700">{{ field[1] }}</label>
-                <input type="number" step="any" name="{{ field[0] }}" required
-                       class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200">
+                <label class="block text-sm font-semibold text-gray-800">{{ label }}</label>
+                <input type="number" step="any" name="{{ field }}" required
+                    class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-indigo-500 text-base">
+                <p class="text-sm text-gray-500 mt-1">{{ help }}</p>
             </div>
             {% endfor %}
-            
+
             <div class="md:col-span-2">
-                <button type="submit" class="w-full py-3 mt-4 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700">
-                    Predict
+                <button type="submit"
+                    class="w-full py-3 mt-4 bg-indigo-600 text-white font-semibold rounded-lg text-lg hover:bg-indigo-700 transition-colors">
+                    🔍 Predict Risk
                 </button>
             </div>
         </form>
 
         {% if result %}
-            <div class="mt-6 p-4 text-center font-bold text-xl {{ 'text-green-600' if 'SURVIVE' in result else 'text-red-600' }}">
-                {{ result }}
-            </div>
+        <div class="mt-8 p-5 text-center text-xl rounded-lg font-semibold
+             {{ 'bg-yellow-100 text-yellow-800' if 'SURVIVE' in result else 'bg-rose-100 text-rose-800' }}">
+            {{ result }}
+        </div>
         {% endif %}
 
-        <div class="mt-6 text-center">
-            <a href="https://colab.research.google.com/drive/1wLCL-qDtqmjkQjlKZadDQDPvGf7XbfRf?usp=sharing" target="_blank"
-               class="text-blue-500 hover:underline">🔗 View Code on Google Colab</a>
+        <div class="mt-8 text-center">
+            <a href="https://colab.research.google.com/drive/1wLCL-qDtqmjkQjlKZadDQDPvGf7XbfRf?usp=sharing"
+                target="_blank" rel="noopener noreferrer"
+                class="text-indigo-600 hover:underline text-base">
+                🔗 View Full Code on Google Colab
+            </a>
         </div>
     </div>
 
-    <footer class="text-center text-gray-500 text-sm py-4">
+    <footer class="text-center text-gray-500 text-sm py-6">
         &copy; 2025 Arbaj Ali. All rights reserved.
     </footer>
 
 </body>
 </html>
+
