@@ -10,27 +10,8 @@
       darkMode: 'class',
     };
   </script>
-  <style>
-    /* Background video styling */
-    #bg-video {
-      position: fixed;
-      right: 0;
-      bottom: 0;
-      min-width: 100%;
-      min-height: 100%;
-      z-index: -1;
-      object-fit: cover;
-      opacity: 0.2;
-    }
-  </style>
 </head>
-<body class="transition-all duration-300 bg-white dark:bg-gray-900 dark:text-white">
-
-  <!-- Background Video -->
-  <video autoplay muted loop id="bg-video">
-    <source src="https://cdn.coverr.co/videos/coverr-doctor-writing-notes-7763/1080p.mp4" type="video/mp4">
-    Your browser does not support HTML5 video.
-  </video>
+<body class="transition-all duration-300 bg-blue-100 dark:bg-gray-900 dark:text-white">
 
   <!-- Theme Toggle -->
   <div class="fixed top-4 right-4">
@@ -40,7 +21,7 @@
   </div>
 
   <!-- Main Container -->
-  <div class="max-w-4xl mx-auto my-16 px-6 py-10 bg-white bg-opacity-80 dark:bg-gray-800 dark:bg-opacity-80 rounded-lg shadow-xl">
+  <div class="max-w-4xl mx-auto my-16 px-6 py-10 bg-white dark:bg-gray-800 rounded-lg shadow-xl">
     <h1 class="text-4xl font-bold text-center text-indigo-700 dark:text-indigo-300 mb-4">
       Heart Failure Risk Predictor
     </h1>
@@ -59,7 +40,6 @@
         ('platelets', 'Platelets (kiloplatelets/mL)', 'Platelet count in blood'),
         ('serum_creatinine', 'Serum Creatinine (mg/dL)', 'Level of creatinine in the blood'),
         ('serum_sodium', 'Serum Sodium (mEq/L)', 'Sodium concentration in blood'),
-        ('sex', 'Sex (0 = Female, 1 = Male)', 'Biological sex of the patient'),
         ('smoking', 'Smoking (0 = No, 1 = Yes)', 'Whether the patient smokes')
       ] %}
       <div>
@@ -69,6 +49,18 @@
         <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">{{ help }}</p>
       </div>
       {% endfor %}
+
+      <!-- Sex Dropdown -->
+      <div>
+        <label class="block text-sm font-medium text-gray-800 dark:text-gray-200">Sex</label>
+        <select name="sex" required
+                class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-400 dark:bg-gray-700 dark:border-gray-600 dark:text-white text-base">
+          <option value="" disabled selected>Select sex</option>
+          <option value="0">Female</option>
+          <option value="1">Male</option>
+        </select>
+        <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Biological sex of the patient</p>
+      </div>
 
       <div class="md:col-span-2">
         <button type="submit"
