@@ -1,2 +1,99 @@
-<!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8" /> <meta name="viewport" content="width=device-width, initial-scale=1.0"/> <title>Heart Failure Risk Predictor</title> <script src="https://cdn.tailwindcss.com"></script> <script> tailwind.config = { darkMode: 'class', }; </script> <style> /* Background video styling */ #bg-video { position: fixed; right: 0; bottom: 0; min-width: 100%; min-height: 100%; z-index: -1; object-fit: cover; opacity: 0.2; } </style> </head> <body class="transition-all duration-300 bg-white dark:bg-gray-900 dark:text-white"> <!-- Background Video --> <video autoplay muted loop id="bg-video"> <source src="https://cdn.coverr.co/videos/coverr-doctor-writing-notes-7763/1080p.mp4" type="video/mp4"> Your browser does not support HTML5 video. </video> <!-- Theme Toggle --> <div class="fixed top-4 right-4"> <button onclick="toggleTheme()" class="bg-indigo-600 text-white px-4 py-2 rounded shadow hover:bg-indigo-700"> Toggle Theme </button> </div> <!-- Main Container --> <div class="max-w-4xl mx-auto my-16 px-6 py-10 bg-white bg-opacity-80 dark:bg-gray-800 dark:bg-opacity-80 rounded-lg shadow-xl"> <h1 class="text-4xl font-bold text-center text-indigo-700 dark:text-indigo-300 mb-4"> Heart Failure Risk Predictor </h1> <p class="text-center text-lg text-gray-700 dark:text-gray-300 mb-8"> Enter the patient's clinical details below to estimate the risk of heart failure. </p> <form method="POST" action="/predict" class="grid grid-cols-1 md:grid-cols-2 gap-6"> {% for field, label, help in [ ('age', 'Age (in years)', 'Patient’s age in years'), ('anaemia', 'Anaemia (0 = No, 1 = Yes)', 'Reduced red blood cells or hemoglobin'), ('creatinine_phosphokinase', 'Creatinine Phosphokinase (mcg/L)', 'CPK enzyme level in blood'), ('diabetes', 'Diabetes (0 = No, 1 = Yes)', 'Whether the patient has diabetes'), ('ejection_fraction', 'Ejection Fraction (%)', 'Percentage of blood leaving the heart at each contraction'), ('high_blood_pressure', 'High Blood Pressure (0 = No, 1 = Yes)', 'History of hypertension'), ('platelets', 'Platelets (kiloplatelets/mL)', 'Platelet count in blood'), ('serum_creatinine', 'Serum Creatinine (mg/dL)', 'Level of creatinine in the blood'), ('serum_sodium', 'Serum Sodium (mEq/L)', 'Sodium concentration in blood'), ('sex', 'Sex (0 = Female, 1 = Male)', 'Biological sex of the patient'), ('smoking', 'Smoking (0 = No, 1 = Yes)', 'Whether the patient smokes') ] %} <div> <label class="block text-sm font-medium text-gray-800 dark:text-gray-200">{{ label }}</label> <input type="number" step="any" name="{{ field }}" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-400 dark:bg-gray-700 dark:border-gray-600 dark:text-white text-base"> <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">{{ help }}</p> </div> {% endfor %} <div class="md:col-span-2"> <button type="submit" class="w-full py-3 mt-4 bg-indigo-600 text-white font-semibold rounded-lg text-lg hover:bg-indigo-700 transition-colors"> 🔍 Predict Risk </button> </div> </form> {% if result %} <div class="mt-8 p-4 text-center text-xl rounded-lg font-semibold {{ 'bg-yellow-200 text-yellow-900 dark:bg-yellow-300' if 'SURVIVE' in result else 'bg-red-200 text-red-800 dark:bg-red-300' }}"> {{ result }} </div> {% endif %} <div class="mt-8 text-center"> <a href="https://colab.research.google.com/drive/1wLCL-qDtqmjkQjlKZadDQDPvGf7XbfRf?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-indigo-700 hover:underline dark:text-indigo-300"> 🔗 View Full Code on Google Colab </a> </div> </div> <footer class="text-center text-gray-600 dark:text-gray-400 text-sm py-6"> &copy; 2025 Arbaj Ali. All rights reserved. </footer> <script> function toggleTheme() { document.documentElement.classList.toggle('dark'); } </script> </body> </html>
-       
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Heart Failure Risk Predictor</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+    };
+  </script>
+</head>
+<body class="transition-all duration-300 bg-blue-100 dark:bg-gray-900 dark:text-white">
+
+  <!-- Theme Toggle -->
+  <div class="fixed top-4 right-4">
+    <button onclick="toggleTheme()" class="bg-indigo-600 text-white px-4 py-2 rounded shadow hover:bg-indigo-700">
+      Toggle Theme
+    </button>
+  </div>
+
+  <!-- Main Container -->
+  <div class="max-w-4xl mx-auto my-16 px-6 py-10 bg-white dark:bg-gray-800 rounded-lg shadow-xl">
+    <h1 class="text-4xl font-bold text-center text-indigo-700 dark:text-indigo-300 mb-4">
+      Heart Failure Risk Predictor
+    </h1>
+    <p class="text-center text-lg text-gray-700 dark:text-gray-300 mb-8">
+      Enter the patient's clinical details below to estimate the risk of heart failure.
+    </p>
+
+    <form method="POST" action="/predict" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {% for field, label, help in [
+        ('age', 'Age (in years)', 'Patient’s age in years'),
+        ('anaemia', 'Anaemia (0 = No, 1 = Yes)', 'Reduced red blood cells or hemoglobin'),
+        ('creatinine_phosphokinase', 'Creatinine Phosphokinase (mcg/L)', 'CPK enzyme level in blood'),
+        ('diabetes', 'Diabetes (0 = No, 1 = Yes)', 'Whether the patient has diabetes'),
+        ('ejection_fraction', 'Ejection Fraction (%)', 'Percentage of blood leaving the heart at each contraction'),
+        ('high_blood_pressure', 'High Blood Pressure (0 = No, 1 = Yes)', 'History of hypertension'),
+        ('platelets', 'Platelets (kiloplatelets/mL)', 'Platelet count in blood'),
+        ('serum_creatinine', 'Serum Creatinine (mg/dL)', 'Level of creatinine in the blood'),
+        ('serum_sodium', 'Serum Sodium (mEq/L)', 'Sodium concentration in blood'),
+        ('smoking', 'Smoking (0 = No, 1 = Yes)', 'Whether the patient smokes')
+      ] %}
+      <div>
+        <label class="block text-sm font-medium text-gray-800 dark:text-gray-200">{{ label }}</label>
+        <input type="number" step="any" name="{{ field }}" required
+               class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-400 dark:bg-gray-700 dark:border-gray-600 dark:text-white text-base">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">{{ help }}</p>
+      </div>
+      {% endfor %}
+
+      <!-- Sex Dropdown -->
+      <div>
+        <label class="block text-sm font-medium text-gray-800 dark:text-gray-200">Sex</label>
+        <select name="sex" required
+                class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-400 dark:bg-gray-700 dark:border-gray-600 dark:text-white text-base">
+          <option value="" disabled selected>Select sex</option>
+          <option value="0">Female</option>
+          <option value="1">Male</option>
+        </select>
+        <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Biological sex of the patient</p>
+      </div>
+
+      <div class="md:col-span-2">
+        <button type="submit"
+                class="w-full py-3 mt-4 bg-indigo-600 text-white font-semibold rounded-lg text-lg hover:bg-indigo-700 transition-colors">
+          🔍 Predict Risk
+        </button>
+      </div>
+    </form>
+
+    {% if result %}
+    <div class="mt-8 p-4 text-center text-xl rounded-lg font-semibold
+         {{ 'bg-yellow-200 text-yellow-900 dark:bg-yellow-300' if 'SURVIVE' in result else 'bg-red-200 text-red-800 dark:bg-red-300' }}">
+      {{ result }}
+    </div>
+    {% endif %}
+
+    <div class="mt-8 text-center">
+      <a href="https://colab.research.google.com/drive/1wLCL-qDtqmjkQjlKZadDQDPvGf7XbfRf?usp=sharing"
+         target="_blank" rel="noopener noreferrer"
+         class="text-indigo-700 hover:underline dark:text-indigo-300">
+        🔗 View Full Code on Google Colab
+      </a>
+    </div>
+  </div>
+
+  <footer class="text-center text-gray-600 dark:text-gray-400 text-sm py-6">
+    &copy; 2025 Arbaj Ali. All rights reserved.
+  </footer>
+
+  <script>
+    function toggleTheme() {
+      document.documentElement.classList.toggle('dark');
+    }
+  </script>
+</body>
+</html>
