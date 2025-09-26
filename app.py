@@ -1,4 +1,5 @@
 from flask import Flask, request, render_template
+import joblib
 
 app = Flask(__name__)
 
@@ -8,32 +9,30 @@ def yes_no_to_int(value):
 def sex_to_int(value):
     return 1 if value.lower() == 'male' else 0
 
+model = joblib.load('model.pkl')
 @app.route('/')
-def index():
+def home():
     return render_template('index.html')
-
-@app.route('/predict', methods=['POST'])
+@app.route('/predict',methods=['POST'])
 def predict():
-    try:
-        # Convert inputs
-        age = float(request.form['age'])
-        creatinine_phosphokinase = float(request.form['creatinine_phosphokinase'])
-        ejection_fraction = float(request.form['ejection_fraction'])
-        platelets = float(request.form['platelets'])
-        serum_creatinine = float(request.form['serum_creatinine'])
-        serum_sodium = float(request.form['serum_sodium'])
+    # Convert inputs
+    age = float(request.form['age'])
+    creatinine_phosphokinase = float(request.form['creatinine_phosphokinase'])
+    ejection_fraction = float(request.form['ejection_fraction'])
+    platelets = float(request.form['platelets'])
+    serum_creatinine = float(request.form['serum_creatinine'])
+    serum_sodium = float(request.form['serum_sodium'])
 
-        # Convert Yes/No to 1/0
-        anaemia = yes_no_to_int(request.form['anaemia'])
-        diabetes = yes_no_to_int(request.form['diabetes'])
-        high_blood_pressure = yes_no_to_int(request.form['high_blood_pressure'])
-        smoking = yes_no_to_int(request.form['smoking'])
+    anaemia = yes_no_to_int(request.form['anaemia'])
+    diabetes = yes_no_to_int(request.form['diabetes'])
+    high_blood_pressure = yes_no_to_int(request.form['high_blood_pressure'])
+    smoking = yes_no_to_int(request.form['smoking'])
 
         # Convert sex to int
-        sex = sex_to_int(request.form['sex'])
+    sex = sex_to_int(request.form['sex'])
 
         # Features array for your model
-        features = [
+    features = [
             age,
             anaemia,
             creatinine_phosphokinase,
@@ -44,21 +43,26 @@ def predict():
             serum_creatinine,
             serum_sodium,
             smoking,
-            sex
-        ]
+            sex        ]
+    prediction = model.predict([features])[0]
+    result_text = f"Predicted outcome: {prediction}"
+  
+    if prediction == 1:
+        result_text = "Death Event"
+    else:
+        result_text = "No Death Event"
 
+    # Pass the result text and prediction code if needed
+    return render_template('index.html', result=result_text, prediction=prediction)
+   
+        
         # Replace the following with your model prediction code:
-        # prediction = your_model.predict([features])
+        #prediction = your_model.predict([features])
         # For demo, let's assume a dummy prediction:
-        prediction = "SURVIVE"  # or "HIGH RISK"
-
+   
         # Compose result string
-        result_text = f"Predicted outcome: {prediction}"
-
-        return render_template('index.html', result=result_text)
-
-    except Exception as e:
-        return render_template('index.html', result=f"Error: {str(e)}")
+    
+   
 
 if __name__ == "__main__":
     app.run(debug=True)
